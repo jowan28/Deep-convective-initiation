@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#SBATCH --partition=short-serial
+#SBATCH --job-name=myjob
+#SBATCH -o %j.out
+#SBATCH -e %j.err
+#SBATCH --time=10:00:00
+#SBATCH --array=1-51
+
+### Exit if there is unintialized variable.
+#set -u
+
+BATCH_START_TIME=$(date)
+echo "[+] ------START TIME (ST): $BATCH_START_TIME------"
+#module add jaspy
+sleep 3
+
+### Provide path to yout python/conda virtual enviornment
+### or you can try
+conda activate jasenv
+
+### Set input parameters for your python program.
+
+
+DAY0=($(seq 1 7 360))
+YEAR=2018
+#${vals[2]}
+### Insert your the name of python program instead of 'xxx.py'.
+
+PROGRAM="func_init_comb.py"
+python ${PROGRAM} ${DAY0[$SLURM_ARRAY_TASK_ID]} ${YEAR}
+
+BATCH_END_TIME=$(date)
+echo "[+] ------END TIME (ET) $BATCH_END_TIME------"
+
